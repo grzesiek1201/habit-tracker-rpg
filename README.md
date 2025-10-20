@@ -28,6 +28,6 @@ pre-commit run --all-files
 
 ## Codecov
 
-- Włącz GitHub App Codecov na repo (publiczne nie wymaga tokenu).
-- Po uruchomieniu CI, raport coverage będzie widoczny. Podmień `USER/REPO` w linkach powyżej.
-- CI wymusza minimalny próg: `coverage report --fail-under=85`.
+- Install the Codecov GitHub App for this repository (no token needed for public repos).
+- After the first CI run, the coverage report will be available. Replace `USER/REPO` in the links above.
+- CI enforces a minimum threshold: `coverage report --fail-under=85`.
