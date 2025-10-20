@@ -63,7 +63,7 @@ def big_image_png():
     # Generate a large noisy PNG (>2MB). ImageField accepts it; our size check should reject it.
     rng = np.random.default_rng(42)
     arr = rng.integers(0, 256, size=(2000, 2000, 3), dtype=np.uint8)
-    img = Image.fromarray(arr, mode="RGB")
+    img = Image.fromarray(arr)
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     data = buf.getvalue()
