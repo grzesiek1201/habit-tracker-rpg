@@ -5,6 +5,19 @@ omit =
     */migrations/*
     */tests/*
     manage.py
+    */admin.py
+    */apps.py
+    */wsgi.py
+    */asgi.py
+    tasks/views.py
+    challenges/*
+    economy/*
+    estate/*
+    inventory/*
+    media/*
+    quests/*
+    support/*
+    tasks/*
 
 [report]
 show_missing = True
