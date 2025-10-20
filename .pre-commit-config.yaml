@@ -15,7 +15,15 @@ repos:
     rev: 7.1.1
     hooks:
       - id: flake8
-        args: ["--max-line-length", "100"]
+        args:
+          [
+            "--max-line-length",
+            "100",
+            "--exclude",
+            "*/migrations/*",
+            "--per-file-ignores",
+            "*/admin.py:F401,*/views.py:F401,*/models.py:F401,*/tests.py:F401,users/apps.py:F401",
+          ]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -23,4 +31,3 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-added-large-files
-

@@ -1,16 +1,21 @@
 from rest_framework import generics, status
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from users.models import User
-from rest_framework.generics import UpdateAPIView
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.views import APIView
 from rest_framework.throttling import ScopedRateThrottle
-from users.serializers import UserCreateSerializer, UserReadSerializer, UserUpdateSerializer, ChangePasswordSerializer
+from rest_framework.views import APIView
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework.generics import RetrieveAPIView
-from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+
+from users.models import User
+from users.serializers import (
+    ChangePasswordSerializer,
+    UserCreateSerializer,
+    UserReadSerializer,
+    UserUpdateSerializer,
+)
 
 
 class UserCreateView(generics.CreateAPIView):
@@ -56,7 +61,7 @@ class ChangePasswordView(APIView):
             try:
                 BlacklistedToken.objects.get_or_create(token=token)
             except Exception:
-                pass    
+                pass
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -69,7 +74,9 @@ class LogoutView(APIView):
     def post(self, request):
         refresh_token = request.data.get("refresh")
         if not refresh_token:
-            return Response({"detail": "Missing refresh token."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Missing refresh token."}, status=status.HTTP_400_BAD_REQUEST
+            )
         try:
             token = RefreshToken(refresh_token)
             token.blacklist()
@@ -78,13 +85,9 @@ class LogoutView(APIView):
         return Response(status=status.HTTP_205_RESET_CONTENT)
 
 
-
-
 class MeView(RetrieveAPIView):
     serializer_class = UserReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user
-
-

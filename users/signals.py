@@ -4,6 +4,7 @@ from django.dispatch import receiver
 
 User = get_user_model()
 
+
 @receiver(user_logged_in, sender=User)
 def update_previous_login(sender, request, user, **kwargs):
     if user.last_login:

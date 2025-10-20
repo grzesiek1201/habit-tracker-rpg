@@ -7,36 +7,40 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='user',
-            name='data_joined',
+            model_name="user",
+            name="data_joined",
         ),
         migrations.RemoveField(
-            model_name='user',
-            name='last_visit',
+            model_name="user",
+            name="last_visit",
         ),
         migrations.AddField(
-            model_name='user',
-            name='previous_login',
+            model_name="user",
+            name="previous_login",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='current_exp',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)]),
+            model_name="user",
+            name="current_exp",
+            field=models.IntegerField(
+                default=0, validators=[django.core.validators.MinValueValidator(0)]
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='current_hp',
-            field=models.IntegerField(default=10, validators=[django.core.validators.MinValueValidator(0)]),
+            model_name="user",
+            name="current_hp",
+            field=models.IntegerField(
+                default=10, validators=[django.core.validators.MinValueValidator(0)]
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='max_hp',
+            model_name="user",
+            name="max_hp",
             field=models.IntegerField(default=10),
         ),
     ]

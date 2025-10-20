@@ -1,5 +1,6 @@
 import pytest
-from users.serializers import UserCreateSerializer, UserUpdateSerializer, ChangePasswordSerializer
+
+from users.serializers import ChangePasswordSerializer, UserCreateSerializer, UserUpdateSerializer
 
 
 @pytest.mark.django_db
@@ -14,7 +15,7 @@ def test_user_create_serializer_normalizes_email_and_creates_user():
 
 @pytest.mark.django_db
 def test_user_update_serializer_rejects_duplicate_email(user_factory):
-    u1 = user_factory(username="u1", email="u1@example.com")
+    user_factory(username="u1", email="u1@example.com")
     u2 = user_factory(username="u2", email="u2@example.com")
     ser = UserUpdateSerializer(instance=u2, data={"email": "U1@EXAMPLE.com"}, partial=True)
     assert not ser.is_valid()
@@ -24,7 +25,9 @@ def test_user_update_serializer_rejects_duplicate_email(user_factory):
 @pytest.mark.django_db
 def test_user_update_serializer_accepts_valid_avatar(user_factory, image_file_jpeg):
     user = user_factory()
-    ser = UserUpdateSerializer(instance=user, data={"avatar_picture": image_file_jpeg}, partial=True)
+    ser = UserUpdateSerializer(
+        instance=user, data={"avatar_picture": image_file_jpeg}, partial=True
+    )
     assert ser.is_valid(), ser.errors
     inst = ser.save()
     assert inst.avatar_picture.name.startswith("avatars/")
@@ -43,5 +46,3 @@ def test_change_password_serializer_mismatch():
     ser = ChangePasswordSerializer(data=data, context={"request": type("R", (), {"user": None})})
     assert not ser.is_valid()
     assert "Passwords do not match." in str(ser.errors)
-
-

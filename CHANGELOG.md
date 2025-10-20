@@ -15,4 +15,3 @@
 - Project initialization and users app setup.
 - Basic JWT configuration; endpoints for registration, login, profile, and profile update.
 - Initial database, static, and media settings.
-

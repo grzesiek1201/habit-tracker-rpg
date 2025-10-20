@@ -45,7 +45,7 @@ def test_me_returns_profile(auth_client):
 
 @pytest.mark.django_db
 def test_profile_update_email_collision(auth_client, user_factory):
-    other = user_factory(username="other", email="other@example.com")
+    user_factory(username="other", email="other@example.com")
     url = reverse("user-update")
     resp = auth_client.patch(url, {"email": "OTHER@example.com"}, format="multipart")
     assert resp.status_code == 400
@@ -63,7 +63,11 @@ def test_profile_update_avatar(auth_client, image_file_jpeg):
 @pytest.mark.django_db
 def test_change_password_flow_invalid_old(auth_client):
     url = reverse("change-password")
-    payload = {"old_password": "Wrong!", "new_password1": "NewStrongPass123!", "new_password2": "NewStrongPass123!"}
+    payload = {
+        "old_password": "Wrong!",
+        "new_password1": "NewStrongPass123!",
+        "new_password2": "NewStrongPass123!",
+    }
     resp = auth_client.post(url, payload, format="json")
     assert resp.status_code == 400
 
@@ -71,10 +75,13 @@ def test_change_password_flow_invalid_old(auth_client):
 @pytest.mark.django_db
 def test_change_password_flow_success(auth_client, api_client, auth_tokens):
     url = reverse("change-password")
-    payload = {"old_password": "StrongPass123!", "new_password1": "NewStrongPass123!", "new_password2": "NewStrongPass123!"}
+    payload = {
+        "old_password": "StrongPass123!",
+        "new_password1": "NewStrongPass123!",
+        "new_password2": "NewStrongPass123!",
+    }
     resp = auth_client.post(url, payload, format="json")
     assert resp.status_code == 204
-
 
     refresh_url = reverse("token_refresh")
     bad = api_client.post(refresh_url, {"refresh": auth_tokens["refresh"]}, format="json")
@@ -86,4 +93,3 @@ def test_logout_blacklists_refresh(auth_client, auth_tokens):
     url = reverse("token_logout")
     resp = auth_client.post(url, {"refresh": auth_tokens["refresh"]}, format="json")
     assert resp.status_code in (205, 200)
-

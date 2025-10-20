@@ -1,5 +1,6 @@
 import pytest
 from django.core.exceptions import ValidationError
+
 from users.models import User
 
 
@@ -26,5 +27,3 @@ def test_gain_exp_levels_up_and_heals():
     assert u.current_level >= 2
     assert u.current_hp == u.max_hp
     assert u.current_exp < u.exp_to_next_level()
-
-

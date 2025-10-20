@@ -1,24 +1,23 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator
-from django.db.models import UniqueConstraint, Index
-from django.db.models.functions import Lower
 from django.core.exceptions import ValidationError
-from django.db import transaction
+from django.core.validators import MinValueValidator
+from django.db import models, transaction
+from django.db.models import Index, UniqueConstraint
+from django.db.models.functions import Lower
 
 
 class User(AbstractUser):
-    """ Custom user model for the habit tracker RPG with RPG attributes
-    """
-    #User attributes
+    """Custom user model for the habit tracker RPG with RPG attributes"""
+
+    # User attributes
     email = models.EmailField(blank=False)
     previous_login = models.DateTimeField(null=True, blank=True)
-    #RPG attributes
+    # RPG attributes
     current_hp = models.IntegerField(validators=[MinValueValidator(0)], default=10)
     max_hp = models.IntegerField(default=10)
     current_exp = models.IntegerField(validators=[MinValueValidator(0)], default=0)
     current_level = models.IntegerField(default=1)
-    avatar_picture = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar_picture = models.ImageField(upload_to="avatars/", null=True, blank=True)
 
     # Estate bonuses
     estate_bonus_hp = models.IntegerField(default=0)
@@ -59,7 +58,7 @@ class User(AbstractUser):
         leveling up formula
         """
         return 100 * self.current_level
-    
+
     class Meta:
         constraints = [
             UniqueConstraint(

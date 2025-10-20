@@ -7,26 +7,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('users', '0002_remove_user_data_joined_remove_user_last_visit_and_more'),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("users", "0002_remove_user_data_joined_remove_user_last_visit_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='user',
+            name="user",
             options={},
         ),
         migrations.AlterField(
-            model_name='user',
-            name='email',
+            model_name="user",
+            name="email",
             field=models.EmailField(max_length=254, unique=True),
         ),
         migrations.AddIndex(
-            model_name='user',
-            index=models.Index(django.db.models.functions.text.Lower('email'), name='idx_lower_email'),
+            model_name="user",
+            index=models.Index(
+                django.db.models.functions.text.Lower("email"), name="idx_lower_email"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='user',
-            constraint=models.UniqueConstraint(django.db.models.functions.text.Lower('email'), name='unique_lower_email'),
+            model_name="user",
+            constraint=models.UniqueConstraint(
+                django.db.models.functions.text.Lower("email"), name="unique_lower_email"
+            ),
         ),
     ]

@@ -1,7 +1,9 @@
-from users.models import User
-from rest_framework import serializers
-from django.contrib.auth.password_validation import validate_password
 import re
+
+from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
+
+from users.models import User
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -33,7 +35,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
+        password = validated_data.pop("password")
         email = validated_data.get("email")
         if email:
             validated_data["email"] = email.lower().strip()
@@ -58,6 +60,7 @@ class UserReadSerializer(serializers.ModelSerializer):
             "estate_bonus_exp",
         ]
 
+
 class UserUpdateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False)
 
@@ -77,27 +80,29 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return email
 
     def validate_avatar_picture(self, file):
-      if not file:
-          return file
-      max_mb = 2
-      if file.size > max_mb * 1024 * 1024:
-          raise serializers.ValidationError("Avatar exceeds 2MB.")
-      valid_types = {"image/jpeg", "image/png", "image/webp"}
-      if getattr(file, "content_type", None) not in valid_types:
-          raise serializers.ValidationError("Only JPEG/PNG/WebP are allowed.")
-      # Optional deep verification using Pillow 
-      try:
-          from PIL import Image
-          file.seek(0)
-          img = Image.open(file)
-          img.verify()
-          if img.format not in {"JPEG", "PNG", "WEBP"}:
-              raise serializers.ValidationError("Unsupported image format.")
-      except ImportError:
-          pass
-      except Exception:
-          raise serializers.ValidationError("Invalid image file.")
-      return file
+        if not file:
+            return file
+        max_mb = 2
+        if file.size > max_mb * 1024 * 1024:
+            raise serializers.ValidationError("Avatar exceeds 2MB.")
+        valid_types = {"image/jpeg", "image/png", "image/webp"}
+        if getattr(file, "content_type", None) not in valid_types:
+            raise serializers.ValidationError("Only JPEG/PNG/WebP are allowed.")
+        # Optional deep verification using Pillow
+        try:
+            from PIL import Image
+
+            file.seek(0)
+            img = Image.open(file)
+            img.verify()
+            if img.format not in {"JPEG", "PNG", "WEBP"}:
+                raise serializers.ValidationError("Unsupported image format.")
+        except ImportError:
+            pass
+        except Exception:
+            raise serializers.ValidationError("Invalid image file.")
+        return file
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only=True)
