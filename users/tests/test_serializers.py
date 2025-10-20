@@ -1,17 +1,12 @@
-import io
 import sys
-import types
 from unittest import mock
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import serializers
 
-from users.serializers import (
-    ChangePasswordSerializer,
-    UserCreateSerializer,
-    UserUpdateSerializer,
-)
 from users.models import User
+from users.serializers import ChangePasswordSerializer, UserCreateSerializer, UserUpdateSerializer
 
 
 @pytest.mark.django_db
@@ -32,9 +27,7 @@ def test_user_create_serializer_normalizes_email_and_creates_user():
 def test_user_update_serializer_rejects_duplicate_email(user_factory):
     user_factory(username="u1", email="u1@example.com")
     u2 = user_factory(username="u2", email="u2@example.com")
-    ser = UserUpdateSerializer(
-        instance=u2, data={"email": "U1@EXAMPLE.com"}, partial=True
-    )
+    ser = UserUpdateSerializer(instance=u2, data={"email": "U1@EXAMPLE.com"}, partial=True)
     assert not ser.is_valid()
     assert "Email already in use." in str(ser.errors)
 
@@ -53,9 +46,7 @@ def test_user_update_serializer_accepts_valid_avatar(user_factory, image_file_jp
 @pytest.mark.django_db
 def test_user_update_serializer_rejects_big_file(user_factory, big_image_png):
     user = user_factory()
-    ser = UserUpdateSerializer(
-        instance=user, data={"avatar_picture": big_image_png}, partial=True
-    )
+    ser = UserUpdateSerializer(instance=user, data={"avatar_picture": big_image_png}, partial=True)
     assert not ser.is_valid()
     assert "Avatar exceeds 2MB." in str(ser.errors)
 
@@ -66,9 +57,7 @@ def test_change_password_serializer_mismatch():
         "new_password1": "abcdefgh",
         "new_password2": "ijklmnop",
     }
-    ser = ChangePasswordSerializer(
-        data=data, context={"request": type("R", (), {"user": None})}
-    )
+    ser = ChangePasswordSerializer(data=data, context={"request": type("R", (), {"user": None})})
     assert not ser.is_valid()
     assert "Passwords do not match." in str(ser.errors)
 
@@ -119,7 +108,7 @@ def test_user_update_serializer_validate_email_none():
 def test_user_update_serializer_validate_email_exclude_self(user_factory):
     """Test email validation excludes current user - covers lines 76-78"""
     u1 = user_factory(username="user1", email="u1@example.com")
-    u2 = user_factory(username="user2", email="u2@example.com")
+    user_factory(username="user2", email="u2@example.com")
 
     ser = UserUpdateSerializer(instance=u1)
     # Should allow same user's email
