@@ -1,4 +1,5 @@
 import pytest
+
 from users.serializers import UserCreateSerializer, UserUpdateSerializer
 
 
@@ -15,12 +16,8 @@ def test_user_update_serializer_avatar_invalid_mime(user_factory):
     user = user_factory()
     from django.core.files.uploadedfile import SimpleUploadedFile
 
-    bad_file = SimpleUploadedFile(
-        "doc.pdf", b"not-an-image", content_type="application/pdf"
-    )
-    ser = UserUpdateSerializer(
-        instance=user, data={"avatar_picture": bad_file}, partial=True
-    )
+    bad_file = SimpleUploadedFile("doc.pdf", b"not-an-image", content_type="application/pdf")
+    ser = UserUpdateSerializer(instance=user, data={"avatar_picture": bad_file}, partial=True)
     assert not ser.is_valid()
     msg = str(ser.errors)
     assert (
@@ -28,5 +25,3 @@ def test_user_update_serializer_avatar_invalid_mime(user_factory):
         or "Upload a valid image" in msg
         or "invalid image" in msg.lower()
     )
-
-

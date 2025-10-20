@@ -16,5 +16,3 @@ def test_logout_invalid_refresh_returns_400(auth_client):
     resp = auth_client.post(url, {"refresh": "not-a-valid-token"}, format="json")
     assert resp.status_code == 400
     assert "invalid token" in str(resp.data).lower()
-
-
