@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
 from django.db.models import UniqueConstraint, Index
 from django.db.models.functions import Lower
+from django.core.exceptions import ValidationError
+from django.db import transaction
 
 
 class User(AbstractUser):
@@ -25,11 +27,25 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    def clean(self):
+        super().clean()
+        if self.email:
+            self.email = self.email.lower().strip()
+        if self.current_hp > self.max_hp:
+            raise ValidationError({"current_hp": "Current HP cannot exceed max HP."})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
+    @transaction.atomic
     def gain_exp(self, amount: int):
         """
-        Increases the user's experience points and level up if needed.
+        Increases the user's experience points and levels up if needed.
         Level up heals the user to full health.
         """
+        if amount < 0:
+            raise ValueError("EXP amount must be non-negative.")
         self.current_exp += amount
         while self.current_exp >= self.exp_to_next_level():
             self.current_exp -= self.exp_to_next_level()

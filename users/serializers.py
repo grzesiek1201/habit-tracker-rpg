@@ -34,6 +34,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('password')
+        email = validated_data.get("email")
+        if email:
+            validated_data["email"] = email.lower().strip()
         user = User(**validated_data)
         user.set_password(password)
         user.save()
@@ -82,7 +85,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
       valid_types = {"image/jpeg", "image/png", "image/webp"}
       if getattr(file, "content_type", None) not in valid_types:
           raise serializers.ValidationError("Only JPEG/PNG/WebP are allowed.")
-      # Optional deep verification using Pillow if available
+      # Optional deep verification using Pillow 
       try:
           from PIL import Image
           file.seek(0)

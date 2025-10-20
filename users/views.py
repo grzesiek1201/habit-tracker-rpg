@@ -30,13 +30,6 @@ class RefreshView(TokenRefreshView):
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "refresh"
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        read = UserReadSerializer(user)
-        return Response(read.data, status=status.HTTP_201_CREATED)
-
 
 class ProfileUpdateView(UpdateAPIView):
     serializer_class = UserUpdateSerializer

@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h.strip()]
 
@@ -80,16 +80,14 @@ WSGI_APPLICATION = 'habit_tracker_rpg.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "htrpg_db",
-        "USER": "htrpg_user",
-        "PASSWORD": "htrpg",
-        "HOST": "localhost",
-        "PORT": "5432",
-    "OPTIONS": 
-        {"options": "-c client_encoding=UTF8"},
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.getenv("DB_NAME", "htrpg_db"),
+        "USER": os.getenv("DB_USER", "htrpg_user"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "htrpg"),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "OPTIONS": {"options": "-c client_encoding=UTF8"},
     }
-
 }
 
 
