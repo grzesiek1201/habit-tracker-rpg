@@ -38,7 +38,7 @@ class User(AbstractUser):
         return super().save(*args, **kwargs)
 
     @transaction.atomic
-    def gain_exp(self, amount: int):
+    def gain_exp(self, amount: int)-> None:
         """
         Increases the user's experience points and levels up if needed.
         Level up heals the user to full health.
