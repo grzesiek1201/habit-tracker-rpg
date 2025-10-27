@@ -208,13 +208,13 @@ tasks/serializers.py          - All serializers (fixed from v0.4.0)
 tasks/views.py                - ViewSets with RPG mechanics
 tasks/urls.py                 - URL routing
 tasks/admin.py                - Admin interface registration
-tasks/tests/test_serializers.py - 15 serializer tests
-tasks/tests/test_views.py     - 32 API tests
+tasks/tests/test_tasks_serializers.py - 15 serializer tests
+tasks/tests/test_tasks_views.py - 32 API tests
 tasks/tests/conftest.py       - Shared test fixtures
 tasks/API_DOCS.md             - Complete API documentation
 tasks/README.md               - Module documentation
 QUICKSTART_TASKS.md           - Quick start guide
-test_tasks_api.py             - Manual API test script
+scripts/test_tasks_api.py     - Manual API test script
 TASKS_COMPLETION_SUMMARY.md   - This file
 ```
 

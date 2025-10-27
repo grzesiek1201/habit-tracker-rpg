@@ -334,8 +334,10 @@ Want to test everything at once? Use our provided test script:
 python manage.py runserver
 
 # In another terminal
-python test_tasks_api.py
+python scripts/test_tasks_api.py
 ```
+
+**Note:** This is a manual testing script located in the `scripts/` folder, not a pytest test file.
 
 This will run through all the endpoints and show you the results!
 
