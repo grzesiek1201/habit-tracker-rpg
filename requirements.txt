@@ -3,6 +3,7 @@ psycopg[binary]>=3.2
 Pillow>=11.0
 djangorestframework>=3.16
 djangorestframework-simplejwt>=5.4
+django-filter>=24.0
 pytest>=8.2
 pytest-django>=4.8
 pytest-cov>=4.1

@@ -1,15 +1,14 @@
-from django.db import models
 from django.conf import settings
-from django.utils import timezone
 from django.core.exceptions import ValidationError
-from .enums import (
-    HabitType, TasksStrength, TasksStatus,
-    TasksRepeats, TasksRepeatOn, RepeatUnit
-)
+from django.db import models
+from django.utils import timezone
+
+from .enums import HabitType, RepeatUnit, TasksRepeatOn, TasksRepeats, TasksStatus, TasksStrength
 
 
 class BaseTask(models.Model):
     """Abstract base model shared by Habit, Daily, and Todo."""
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     notes = models.TextField(blank=True)
@@ -28,6 +27,7 @@ class BaseTask(models.Model):
 
 class Habit(BaseTask):
     """Represents a user habit, either good or bad."""
+
     type = models.CharField(
         max_length=15,
         choices=HabitType.choices,
@@ -46,6 +46,7 @@ class Habit(BaseTask):
 
 class Daily(BaseTask):
     """Represents a recurring daily task."""
+
     repeats = models.CharField(
         max_length=15,
         choices=TasksRepeats.choices,
@@ -64,6 +65,12 @@ class Daily(BaseTask):
         choices=RepeatUnit.choices,
         default=RepeatUnit.DAYS,
     )
+    status = models.CharField(
+        max_length=15,
+        choices=TasksStatus.choices,
+        default=TasksStatus.ACTIVE,
+        db_index=True,
+    )
 
     def __str__(self):
         return self.name
@@ -71,6 +78,7 @@ class Daily(BaseTask):
 
 class Todo(BaseTask):
     """Represents a one-time to-do task."""
+
     due_date = models.DateField()
     is_completed = models.BooleanField(default=False)
 

@@ -7,8 +7,8 @@ Users (auth, profil, konto)
 - [x] Polityka haseł i throttling dla endpointów auth.
 
 Tasks (habits, dailies, todos)
-- Listy: nawyki (słabe/mocne), codzienne (dzisiejsze/nieaktywne), do zrobienia (aktywne/zaplanowane/wykonane).
-- Filtrowanie po statusach; opcjonalnie siła nawyków.
+- [x] Listy: nawyki (słabe/mocne), codzienne (dzisiejsze/nieaktywne), do zrobienia (aktywne/zaplanowane/wykonane).
+- [x]Filtrowanie po statusach; opcjonalnie siła nawyków.
 
 Inventory (ekwipunek)
 - Wyposażenie, skrzynia, narzędzia (budowa posiadłości).

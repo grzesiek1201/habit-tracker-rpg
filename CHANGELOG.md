@@ -1,7 +1,39 @@
 ### CHANGELOG
 
 ## [Unreleased]
-- Ongoing work on additional modules (economy, challenges), tests, and docs.
+- Ongoing work on additional modules (inventory, estate, economy, quests, challenges, support), tests, and docs.
+
+## [v0.5.0-beta] - 2025-10-27
+
+**Tasks Module - Complete Implementation**
+
+- Implemented full CRUD API for Habits, Dailies, and Todos using DRF ViewSets.
+- Added completion actions with RPG mechanics:
+  - Good habits: +10 EXP, increase strength
+  - Bad habits: -5 HP, decrease strength
+  - Daily tasks: +15 EXP, increase strength, mark as completed
+  - Todos: +20 EXP, increase strength, mark as completed
+- Integrated django-filter for advanced filtering and search capabilities.
+- Added filtering by type, status, strength, completion state, and custom filters (active/planned/completed).
+- Implemented comprehensive test suite:
+  - 15 serializer tests (validation, defaults, read-only fields)
+  - 32 API/ViewSet tests (CRUD, permissions, completion logic, filtering)
+  - 9 model tests (already existing)
+  - Total: 56 tests for tasks module, all passing ✅
+- Registered all task models in Django admin with custom list displays and filters.
+- Created URL routing with RESTful endpoints:
+  - `/api/tasks/habits/` - List/Create habits
+  - `/api/tasks/habits/{id}/` - Retrieve/Update/Delete habit
+  - `/api/tasks/habits/{id}/complete/` - Complete habit action
+  - `/api/tasks/dailies/` - List/Create daily tasks
+  - `/api/tasks/dailies/{id}/` - Retrieve/Update/Delete daily
+  - `/api/tasks/dailies/{id}/complete/` - Complete daily action
+  - `/api/tasks/todos/` - List/Create todos
+  - `/api/tasks/todos/{id}/` - Retrieve/Update/Delete todo
+  - `/api/tasks/todos/{id}/complete/` - Complete todo action
+- Added django-filter>=24.0 to requirements.
+- Ensured user isolation: users can only access their own tasks.
+- Fixed serializer bugs from v0.4.0 (wrong base class, incorrect model references).
 
 ## [v0.4.0-beta] - 2025-10-24
 
