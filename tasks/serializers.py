@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Habit, Daily, Todo
+
+from .models import Daily, Habit, Todo
 
 
 class HabitSerializer(serializers.ModelSerializer):

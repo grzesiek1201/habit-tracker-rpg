@@ -196,9 +196,7 @@ def test_habit_filter_by_type(authenticated_client, user):
 @pytest.mark.django_db
 def test_habit_filter_by_status(authenticated_client, user):
     """Test filtering habits by status"""
-    Habit.objects.create(
-        user=user, name="Active", type=HabitType.GOOD, status=TasksStatus.ACTIVE
-    )
+    Habit.objects.create(user=user, name="Active", type=HabitType.GOOD, status=TasksStatus.ACTIVE)
     Habit.objects.create(
         user=user, name="Inactive", type=HabitType.GOOD, status=TasksStatus.INACTIVE
     )
@@ -328,9 +326,7 @@ def test_daily_complete_already_completed(authenticated_client, user, daily):
 @pytest.mark.django_db
 def test_daily_filter_by_status(authenticated_client, user):
     """Test filtering dailies by status"""
-    Daily.objects.create(
-        user=user, name="Active Daily", repeats="daily", status=TasksStatus.ACTIVE
-    )
+    Daily.objects.create(user=user, name="Active Daily", repeats="daily", status=TasksStatus.ACTIVE)
     Daily.objects.create(
         user=user, name="Completed Daily", repeats="daily", status=TasksStatus.COMPLETED
     )
@@ -462,12 +458,8 @@ def test_todo_complete_already_completed(authenticated_client, user, todo):
 def test_todo_filter_by_completed(authenticated_client, user):
     """Test filtering todos by completion status"""
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    Todo.objects.create(
-        user=user, name="Active Todo", due_date=tomorrow, is_completed=False
-    )
-    Todo.objects.create(
-        user=user, name="Completed Todo", due_date=tomorrow, is_completed=True
-    )
+    Todo.objects.create(user=user, name="Active Todo", due_date=tomorrow, is_completed=False)
+    Todo.objects.create(user=user, name="Completed Todo", due_date=tomorrow, is_completed=True)
 
     url = reverse("todo-list")
     response = authenticated_client.get(url, {"is_completed": "false"})
@@ -479,12 +471,8 @@ def test_todo_filter_by_completed(authenticated_client, user):
 def test_todo_filter_active(authenticated_client, user):
     """Test filtering todos with 'active' filter"""
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    Todo.objects.create(
-        user=user, name="Active Todo", due_date=tomorrow, is_completed=False
-    )
-    Todo.objects.create(
-        user=user, name="Completed Todo", due_date=tomorrow, is_completed=True
-    )
+    Todo.objects.create(user=user, name="Active Todo", due_date=tomorrow, is_completed=False)
+    Todo.objects.create(user=user, name="Completed Todo", due_date=tomorrow, is_completed=True)
 
     url = reverse("todo-list")
     response = authenticated_client.get(url, {"filter": "active"})
@@ -498,12 +486,8 @@ def test_todo_filter_active(authenticated_client, user):
 def test_todo_filter_completed(authenticated_client, user):
     """Test filtering todos with 'completed' filter"""
     tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    Todo.objects.create(
-        user=user, name="Active Todo", due_date=tomorrow, is_completed=False
-    )
-    Todo.objects.create(
-        user=user, name="Completed Todo", due_date=tomorrow, is_completed=True
-    )
+    Todo.objects.create(user=user, name="Active Todo", due_date=tomorrow, is_completed=False)
+    Todo.objects.create(user=user, name="Completed Todo", due_date=tomorrow, is_completed=True)
 
     url = reverse("todo-list")
     response = authenticated_client.get(url, {"filter": "completed"})

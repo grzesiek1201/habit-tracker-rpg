@@ -1,7 +1,7 @@
 # 📊 HT_RPG - Raport Postępu Projektu
 
-**Data wygenerowania:** 2025-10-27  
-**Wersja:** v0.5.0-beta  
+**Data wygenerowania:** 2025-10-27
+**Wersja:** v0.5.0-beta
 **Status:** W trakcie rozwoju
 
 ---
@@ -562,7 +562,7 @@ Projekt ma solidne fundamenty. Users i Tasks są production-ready. Pozostaje ~75
 
 ---
 
-**Ostatnia aktualizacja:** 2025-10-27  
+**Ostatnia aktualizacja:** 2025-10-27
 **Następna przewidywana aktualizacja:** Po ukończeniu Inventory module
 
 ---

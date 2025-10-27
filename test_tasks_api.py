@@ -6,9 +6,10 @@ Usage:
     python test_tasks_api.py
 """
 
-import requests
 import json
 from datetime import date, timedelta
+
+import requests
 
 BASE_URL = "http://localhost:8000"
 API_URL = f"{BASE_URL}/api"
@@ -22,7 +23,7 @@ def print_response(response, title="Response"):
     print(f"Status Code: {response.status_code}")
     try:
         print(json.dumps(response.json(), indent=2))
-    except:
+    except (ValueError, AttributeError):
         print(response.text)
     print(f"{'=' * 60}\n")
 
@@ -62,9 +63,7 @@ def test_tasks_api():
     # Step 4: Create a good habit
     print("✅ Step 4: Creating a good habit...")
     habit_data = {"name": "Drink Water", "notes": "8 glasses per day", "type": "good"}
-    response = requests.post(
-        f"{API_URL}/tasks/habits/", json=habit_data, headers=headers
-    )
+    response = requests.post(f"{API_URL}/tasks/habits/", json=habit_data, headers=headers)
     print_response(response, "Create Good Habit")
 
     if response.status_code == 201:
@@ -75,9 +74,7 @@ def test_tasks_api():
     # Step 5: Create a bad habit
     print("❌ Step 5: Creating a bad habit...")
     bad_habit_data = {"name": "Smoking", "notes": "Trying to quit", "type": "bad"}
-    response = requests.post(
-        f"{API_URL}/tasks/habits/", json=bad_habit_data, headers=headers
-    )
+    response = requests.post(f"{API_URL}/tasks/habits/", json=bad_habit_data, headers=headers)
     print_response(response, "Create Bad Habit")
 
     if response.status_code == 201:
@@ -98,9 +95,7 @@ def test_tasks_api():
     # Step 8: Complete the good habit
     if habit_id:
         print("🎯 Step 8: Completing good habit...")
-        response = requests.post(
-            f"{API_URL}/tasks/habits/{habit_id}/complete/", headers=headers
-        )
+        response = requests.post(f"{API_URL}/tasks/habits/{habit_id}/complete/", headers=headers)
         print_response(response, "Complete Good Habit")
 
     # Step 9: Record bad habit
@@ -119,9 +114,7 @@ def test_tasks_api():
         "repeats": "daily",
         "repeat_on": "everyday",
     }
-    response = requests.post(
-        f"{API_URL}/tasks/dailies/", json=daily_data, headers=headers
-    )
+    response = requests.post(f"{API_URL}/tasks/dailies/", json=daily_data, headers=headers)
     print_response(response, "Create Daily Task")
 
     if response.status_code == 201:
@@ -132,9 +125,7 @@ def test_tasks_api():
     # Step 11: Complete daily task
     if daily_id:
         print("✨ Step 11: Completing daily task...")
-        response = requests.post(
-            f"{API_URL}/tasks/dailies/{daily_id}/complete/", headers=headers
-        )
+        response = requests.post(f"{API_URL}/tasks/dailies/{daily_id}/complete/", headers=headers)
         print_response(response, "Complete Daily Task")
 
     # Step 12: Create a todo
@@ -161,9 +152,7 @@ def test_tasks_api():
     # Step 14: Complete todo
     if todo_id:
         print("🎉 Step 14: Completing todo...")
-        response = requests.post(
-            f"{API_URL}/tasks/todos/{todo_id}/complete/", headers=headers
-        )
+        response = requests.post(f"{API_URL}/tasks/todos/{todo_id}/complete/", headers=headers)
         print_response(response, "Complete Todo")
 
     # Step 15: Check final user stats
@@ -189,9 +178,7 @@ def test_tasks_api():
     print("⚠️ Step 18: Testing past due date (should fail)...")
     yesterday = (date.today() - timedelta(days=1)).isoformat()
     invalid_todo = {"name": "Past Task", "due_date": yesterday}
-    response = requests.post(
-        f"{API_URL}/tasks/todos/", json=invalid_todo, headers=headers
-    )
+    response = requests.post(f"{API_URL}/tasks/todos/", json=invalid_todo, headers=headers)
     print_response(response, "Create Todo with Past Date (Expected Error)")
 
     print("\n" + "=" * 60)

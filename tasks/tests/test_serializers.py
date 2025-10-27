@@ -2,7 +2,6 @@ import datetime
 
 import pytest
 from django.contrib.auth import get_user_model
-from rest_framework.exceptions import ValidationError
 
 from tasks.enums import HabitType, TasksStatus, TasksStrength
 from tasks.models import Daily, Habit, Todo

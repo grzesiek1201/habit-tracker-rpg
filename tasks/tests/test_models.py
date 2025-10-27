@@ -1,9 +1,11 @@
+import datetime
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from tasks.models import Habit, Daily, Todo
-from tasks.enums import HabitType, TasksStatus, TasksStrength, TasksRepeats, TasksRepeatOn
-import datetime
+
+from tasks.enums import HabitType, TasksRepeatOn, TasksRepeats, TasksStatus, TasksStrength
+from tasks.models import Daily, Habit, Todo
 
 User = get_user_model()
 
@@ -13,7 +15,9 @@ User = get_user_model()
 # -----------------------
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(username="u1", email="u1@example.com", password="StrongPass123!")
+    return User.objects.create_user(
+        username="u1", email="u1@example.com", password="StrongPass123!"
+    )
 
 
 @pytest.fixture
@@ -114,11 +118,7 @@ def test_todo_str_method(todo):
 def test_todo_due_date_validation(user):
     """Test that a past due_date raises ValidationError"""
     past_date = datetime.date.today() - datetime.timedelta(days=1)
-    todo = Todo(
-        user=user,
-        name="Past task",
-        due_date=past_date
-    )
+    todo = Todo(user=user, name="Past task", due_date=past_date)
     with pytest.raises(ValidationError):
         todo.full_clean()
 
@@ -126,8 +126,6 @@ def test_todo_due_date_validation(user):
 @pytest.mark.django_db
 def test_todo_is_completed_default(user):
     todo = Todo.objects.create(
-        user=user,
-        name="New task",
-        due_date=datetime.date.today() + datetime.timedelta(days=1)
+        user=user, name="New task", due_date=datetime.date.today() + datetime.timedelta(days=1)
     )
     assert todo.is_completed is False
