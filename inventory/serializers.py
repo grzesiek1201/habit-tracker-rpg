@@ -1,60 +1,47 @@
 from rest_framework import serializers
-from .models import Item, UserItem, EquipmentSlots
+from inventory.models import Item, UserItem, EquipmentSlots
+from user.models import Character
 
 
+# --- ITEM SERIALIZER ---
 class ItemSerializer(serializers.ModelSerializer):
-    """Display of the available items (in shop or database)."""
-
     class Meta:
         model = Item
-        fields = [
-            "id",
-            "name",
-            "description",
-            "level",
-            "rarity",
-            "value",
-            "bonuses",
-            "consumable",
-            "equipable",
-            "type",
-        ]
+        fields = '__all__'
 
 
+# --- USER ITEM SERIALIZER ---
 class UserItemSerializer(serializers.ModelSerializer):
-    """Serializer for user's owned items (inventory)."""
-
-    item = ItemSerializer(read_only=True)
+    item = ItemSerializer(read_only=True)  # pokazuje dane o przedmiocie
+    item_id = serializers.PrimaryKeyRelatedField(
+        queryset=Item.objects.all(), source='item', write_only=True
+    )
 
     class Meta:
         model = UserItem
-        fields = ["id", "item", "quantity", "is_equipped", "durability", "acquired_at"]
-        read_only_fields = ["is_equipped", "acquired_at"]
-        extra_kwargs = {
-            "quantity": {"min_value": 1},
-            "durability": {"min_value": 0, "max_value": 100},
-        }
-
-    def validate(self, data):
-        item = data.get("item")
-        if item and not item.equipable and data.get("is_equipped"):
-            raise serializers.ValidationError("This item cannot be equipped.")
-        return data
+        fields = ['id', 'item', 'item_id', 'quantity', 'is_equipped', 'character']
 
 
+# --- EQUIPMENT SLOTS SERIALIZER ---
 class EquipmentSlotsSerializer(serializers.ModelSerializer):
-    """Serializer displaying all currently equipped items in each slot."""
-
-    equipped_items = serializers.SerializerMethodField()
+    weapon = ItemSerializer(read_only=True)
+    armor = ItemSerializer(read_only=True)
+    accessory = ItemSerializer(read_only=True)
 
     class Meta:
         model = EquipmentSlots
-        fields = ["equipped_items"]
+        fields = ['id', 'character', 'weapon', 'armor', 'accessory']
 
-    def get_equipped_items(self, obj):
-        return {
-            slot: UserItemSerializer(getattr(obj, slot)).data
-            if getattr(obj, slot)
-            else None
-            for slot in EquipmentSlots.SLOTS
-        }
+
+# --- CHARACTER SERIALIZER ---
+class CharacterSerializer(serializers.ModelSerializer):
+    items = UserItemSerializer(many=True, read_only=True, source='useritem_set')
+    equipment = EquipmentSlotsSerializer(read_only=True)
+
+    class Meta:
+        model = Character
+        fields = [
+            'id', 'user', 'name', 'level', 'exp', 'coins', 'health', 
+            'strength', 'agility', 'intelligence', 'vitality',
+            'items', 'equipment'
+        ]

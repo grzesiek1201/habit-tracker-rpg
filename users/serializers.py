@@ -1,9 +1,7 @@
 import re
-
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-
-from users.models import User
+from users.models import User, Character
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -16,12 +14,14 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email", "password"]
 
     def validate_username(self, value):
-        v = value.strip()
-        if not re.fullmatch(r"[A-Za-z0-9_\-]+", v):
-            raise serializers.ValidationError("Username may contain letters, digits, _ and - only.")
-        if User.objects.filter(username__iexact=v).exists():
+        value = value.strip()
+        if not re.fullmatch(r"[A-Za-z0-9_\-]+", value):
+            raise serializers.ValidationError(
+                "Username may contain letters, digits, _ and - only."
+            )
+        if User.objects.filter(username__iexact=value).exists():
             raise serializers.ValidationError("Username already in use.")
-        return v
+        return value
 
     def validate_email(self, value):
         email = value.lower().strip()
@@ -30,15 +30,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return email
 
     def validate(self, attrs):
-        password = attrs.get("password")
-        validate_password(password)
+        validate_password(attrs.get("password"))
         return attrs
 
     def create(self, validated_data):
         password = validated_data.pop("password")
-        email = validated_data.get("email")
-        if email:
-            validated_data["email"] = email.lower().strip()
+        validated_data["email"] = validated_data["email"].lower().strip()
         user = User(**validated_data)
         user.set_password(password)
         user.save()
@@ -46,11 +43,22 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserReadSerializer(serializers.ModelSerializer):
+    character = CharacterSerializer(read_only=True)  # nested serializer
+
     class Meta:
         model = User
         fields = [
             "id",
             "username",
+            "email",
+            "character",
+        ]
+
+
+class CharacterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Character
+        fields = [
             "current_hp",
             "max_hp",
             "current_exp",
@@ -82,13 +90,18 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def validate_avatar_picture(self, file):
         if not file:
             return file
+
+        # Sprawdzenie rozmiaru
         max_mb = 2
         if file.size > max_mb * 1024 * 1024:
             raise serializers.ValidationError("Avatar exceeds 2MB.")
+
+        # Sprawdzenie typu MIME
         valid_types = {"image/jpeg", "image/png", "image/webp"}
         if getattr(file, "content_type", None) not in valid_types:
-            raise serializers.ValidationError("Only JPEG/PNG/WebP are allowed.")
-        # Optional deep verification using Pillow
+            raise serializers.ValidationError("Only JPEG, PNG or WebP are allowed.")
+
+        # Dodatkowa weryfikacja z użyciem Pillow (opcjonalna)
         try:
             from PIL import Image
 
@@ -101,6 +114,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             pass
         except Exception:
             raise serializers.ValidationError("Invalid image file.")
+        finally:
+            file.seek(0)
+
         return file
 
 
@@ -112,7 +128,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate(self, attrs):
         if attrs["new_password1"] != attrs["new_password2"]:
             raise serializers.ValidationError("Passwords do not match.")
-        request = self.context.get("request")
-        user = getattr(request, "user", None)
+
+        user = self.context.get("request").user
         validate_password(attrs["new_password1"], user=user)
         return attrs
