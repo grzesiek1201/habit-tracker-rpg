@@ -119,3 +119,51 @@ class LogoutView(APIView):
             )
 
         return Response(status=status.HTTP_205_RESET_CONTENT)
+
+
+class CharacterViewSet(viewsets.ModelViewSet):
+    """
+    Manage game characters. Each user has one character.
+    """
+    serializer_class = CharacterSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Return only current user's character(s)
+        return Character.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        # Ensure character is bound to the authenticated user
+        serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=["post"])
+    def allocate_stats(self, request, pk=None):
+        """Manually allocate stat points (STR, DEX, INT, VIG)."""
+        character = self.get_object()
+        data = request.data
+
+        strength = int(data.get("strength", 0))
+        dexterity = int(data.get("dexterity", 0))
+        intelligence = int(data.get("intelligence", 0))
+        vigor = int(data.get("vigor", 0))
+
+        total = strength + dexterity + intelligence + vigor
+        if total > character.unallocated_stat_points:
+            return Response(
+                {"detail": "Not enough unallocated stat points."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Apply allocation
+        character.strength += strength
+        character.dexterity += dexterity
+        character.intelligence += intelligence
+        character.vigor += vigor
+        character.unallocated_stat_points -= total
+
+        # Update dependent stats
+        character.max_mana = 50 + (character.intelligence * 5)
+        character.max_hp = 100 + (character.vigor * 5)
+        character.save()
+
+        return Response(CharacterSerializer(character).data)

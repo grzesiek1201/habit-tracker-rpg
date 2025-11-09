@@ -42,6 +42,26 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
 
+class CharacterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Character
+        fields = [
+            "current_hp",
+            "current_mana",
+            "max_hp",
+            "max_mana",
+            "current_exp",
+            "current_level",
+            "strength",
+            "dexterity",
+            "intelligence",
+            "vigor",
+            "avatar_picture",
+            "estate_bonus_hp",
+            "estate_bonus_exp",
+        ]
+
+
 class UserReadSerializer(serializers.ModelSerializer):
     character = CharacterSerializer(read_only=True)  # nested serializer
 
@@ -55,26 +75,12 @@ class UserReadSerializer(serializers.ModelSerializer):
         ]
 
 
-class CharacterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Character
-        fields = [
-            "current_hp",
-            "max_hp",
-            "current_exp",
-            "current_level",
-            "avatar_picture",
-            "estate_bonus_hp",
-            "estate_bonus_exp",
-        ]
-
-
 class UserUpdateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False)
 
     class Meta:
         model = User
-        fields = ["email", "avatar_picture"]
+        fields = ["email", "profile_picture"]
 
     def validate_email(self, value):
         if value is None:
@@ -91,17 +97,17 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if not file:
             return file
 
-        # Sprawdzenie rozmiaru
+        # Check file size
         max_mb = 2
         if file.size > max_mb * 1024 * 1024:
             raise serializers.ValidationError("Avatar exceeds 2MB.")
 
-        # Sprawdzenie typu MIME
+        # Check MIME type
         valid_types = {"image/jpeg", "image/png", "image/webp"}
         if getattr(file, "content_type", None) not in valid_types:
             raise serializers.ValidationError("Only JPEG, PNG or WebP are allowed.")
 
-        # Dodatkowa weryfikacja z użyciem Pillow (opcjonalna)
+        # Additional verification using Pillow (optional)
         try:
             from PIL import Image
 

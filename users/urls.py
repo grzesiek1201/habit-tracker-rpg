@@ -1,6 +1,7 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 
-from .views import (
+from users.views import (
     UserCreateView,
     LoginView,
     RefreshView,
@@ -9,6 +10,12 @@ from .views import (
     ProfileUpdateView,
     ChangePasswordView,
 )
+from users.views_character import CharacterViewSet
+
+
+
+router = DefaultRouter()
+router.register(r'characters', CharacterViewSet, basename='character')
 
 urlpatterns = [
     # --- Authentication & Token Management ---
@@ -21,4 +28,4 @@ urlpatterns = [
     path("profile/", MeView.as_view(), name="user-me"),                       # Get current user data
     path("profile/update/", ProfileUpdateView.as_view(), name="user-update"), # Update email or avatar
     path("profile/change-password/", ChangePasswordView.as_view(), name="change-password"), # Change user password
-]
+] + router.urls

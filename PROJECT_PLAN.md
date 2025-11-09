@@ -11,8 +11,8 @@ Tasks (habits, dailies, todos)
 - [x]Filtrowanie po statusach; opcjonalnie siła nawyków.
 
 Inventory (ekwipunek)
-- Wyposażenie, skrzynia, narzędzia (budowa posiadłości).
-- Relacje z użytkownikiem, flaga „equipped”, wpływ na statystyki.
+- [x] Wyposażenie, skrzynia, narzędzia (budowa posiadłości).
+- [x] Relacje z użytkownikiem, flaga „equipped”, wpływ na statystyki.
 
 Estate / Homestead (posiadłość)
 - Widok posiadłości: Dom, tartak, kamieniołom, kopalnia żelaza, obiekty do treningu.
