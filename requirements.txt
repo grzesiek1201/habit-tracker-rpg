@@ -1,4 +1,4 @@
-Django>=5.2,<6.0
+Django>=6.0a1,<6.0
 psycopg[binary]>=3.2
 Pillow>=11.0
 djangorestframework>=3.16
@@ -10,3 +10,6 @@ pytest-cov>=4.1
 factory_boy>=3.3
 freezegun>=1.5
 numpy>=2.3
+
+celery~=5.5.3
+requests~=2.32.5
