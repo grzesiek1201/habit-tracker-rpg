@@ -18,7 +18,7 @@ class UserItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserItem
-        fields = ['id', 'item', 'item_id', 'quantity', 'is_equipped', 'character']
+        fields = ['id', 'item', 'item_id', 'quantity', 'is_equipped']
 
 
 # --- EQUIPMENT SLOTS SERIALIZER ---
@@ -29,7 +29,7 @@ class EquipmentSlotsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EquipmentSlots
-        fields = ['id', 'character', 'weapon', 'armor', 'accessory']
+        fields = ['id', 'weapon', 'armor', 'accessory']
 
 
 # --- CHARACTER SERIALIZER ---

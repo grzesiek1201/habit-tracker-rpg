@@ -107,7 +107,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if getattr(file, "content_type", None) not in valid_types:
             raise serializers.ValidationError("Only JPEG, PNG or WebP are allowed.")
 
-        # Additional verification using Pillow (optional)
+        # Additional verification using Pillow
         try:
             from PIL import Image
 

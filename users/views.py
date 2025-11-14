@@ -1,5 +1,5 @@
-from rest_framework import generics, status
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+from rest_framework import generics, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+
 
 from users.models import User
 from users.serializers import (
@@ -17,6 +19,8 @@ from users.serializers import (
     UserUpdateSerializer,
 )
 
+from users.models import Character
+from users.serializers import CharacterSerializer
 
 class UserCreateView(generics.CreateAPIView):
     """View for user registration."""

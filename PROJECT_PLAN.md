@@ -15,9 +15,9 @@ Inventory (ekwipunek)
 - [x] Relacje z użytkownikiem, flaga „equipped”, wpływ na statystyki.
 
 Estate / Homestead (posiadłość)
-- Widok posiadłości: Dom, tartak, kamieniołom, kopalnia żelaza.
-- Bonusy przechowywane elastycznie (JSONField), endpointy: GET /homestead/, POST /build/.
-- Generowanie zasobów/bonusów w tle (Celery).
+- [x] Widok posiadłości: Dom, tartak, kamieniołom, kopalnia żelaza.
+- [x] Bonusy przechowywane elastycznie (JSONField), endpointy: GET /homestead/, POST /build/.
+- [x] Generowanie zasobów/bonusów w tle (Celery).
 
 Shop / Economy (sklep i waluty)
 - Targowisko, zbrojownia; filtrowanie itemów wg typu/rarity.
